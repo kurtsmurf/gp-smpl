@@ -1,0 +1,7 @@
+body {
+    background: hsl(294, 20%, 20%);
+    color: hsl(294, 80%, 80%);
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+}
