@@ -1,24 +1,35 @@
-import * as Tone from 'https://cdn.skypack.dev/tone';
+// @ts-check
 
-window.addEventListener('gamepadconnected', () => {
-  const s = new Tone.Synth();
-  s.toDestination()
-
-  let previousPressed = false
-
-  let loop = () => {
-    const gamePads = navigator.getGamepads();
-    for (const key in gamePads) {
-      const buttons = gamePads[key]?.buttons;
-      if (!buttons) continue ;
-      const pressed = buttons.reduce((acc, cur) => acc || cur.pressed, false);
-      if (pressed && !previousPressed) {
-        s.triggerAttackRelease("c4", "4n")
-      }
-      previousPressed = pressed
-    }
-
-    requestAnimationFrame(loop)
+const blorp = ([previous, button], i) => {
+  if (!previous.pressed && button.pressed) {
+    console.log(i, button)
   }
-  loop();
-})
+}
+
+const blah = ([previous, gamepad]) => {
+
+  if (previous.index !== gamepad.index) console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111")
+
+  zip(
+    previous.buttons,
+    gamepad.buttons,
+  ).forEach(blorp);
+}
+
+let previousGamepads = [];
+const loop = () => {
+  const currentGamepads = [...navigator.getGamepads()];
+
+  previousGamepads &&
+    zip(
+      previousGamepads.filter(Boolean),
+      currentGamepads.filter(Boolean),
+    ).forEach(blah);
+
+  previousGamepads = currentGamepads
+  requestAnimationFrame(loop)
+}
+
+const zip = (a, b) => a.map((e, i) => [e, b[i]])
+
+loop();
